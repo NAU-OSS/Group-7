@@ -17,6 +17,7 @@ bool is_valid(char *numstring)
     return *curr_char == '\0';
 }
 
+
 bool characteristic(char numString[], int *c)
 {
     int index = 0;
@@ -24,27 +25,28 @@ bool characteristic(char numString[], int *c)
     int cval = 0;
 
     //validate numstring
+   
     if (!is_valid(numString))
     {
         return false;
-    }
-
+    } 
     //find sign of numstring and find start index of number
     while (numString[index] != '\0' && numString[index] != '.')
     {
-        if (numString[index] == '-')
+        if(numString[index] == '-')
         {
             signValue = -1;
         }
-
-        if (is_digit(numString[index]))
+        
+        if( isdigit(numString[index]))
         {
             cval = (cval * 10) + (numString[index] - '0');
+                
         }
 
         index++;
     }
-
+    
     *c = cval * signValue;
 
     return true;
@@ -55,30 +57,30 @@ bool mantissa(char numString[], int *numerator, int *denominator)
     int index = 0;
     int dvalue = 1;
     int nvalue = 0;
-
+    
     //validate numstring
+
     if (!is_valid(numString))
     {
         return false;
     }
-
     //get to '.' or end of string
-    while (numString[index] != '\0')
+    while(numString[index] != '\0')
     {
-        if (numString[index] == '.')
+        if(numString[index] == '.')
         {
             index++;
 
-            while (is_digit(numString[index]))
+            while(isdigit(numString[index]))
             {
                 dvalue *= 10;
-                nvalue = (nvalue * 10) + (numString[index] - '0');
+                nvalue = (nvalue *10) + (numString[index] - '0');
 
                 index++;
             }
         }
 
-        index++;
+        index ++;
     }
 
     *numerator = nvalue;
@@ -87,23 +89,21 @@ bool mantissa(char numString[], int *numerator, int *denominator)
     return true;
 }
 
+
 int main()
 {
     int c = 0;
     int n = 0;
     int d = 0;
     char number[] = "   ----12.5987907  ";
+    
+    characteristic(number,  &c);
 
-    if (characteristic(number, &c) && mantissa(number, &n, &d))
-    {
-        printf("characteristic: %d\n", c);
-        printf("numerator: %d\n", n);
-        printf("denominator: %d\n", d);
-        return 0;
-    }
-    else
-    {
-        fprintf(stderr, "The string was invalid!\n\n");
-        return 42 + 27;
-    }
+    printf("%d\n", c);
+
+    mantissa(number, &n, &d);
+
+    printf("numerator: %d\n", n);
+    printf("denominator: %d\n", d);
+    return 0;
 }
