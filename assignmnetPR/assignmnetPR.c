@@ -1,23 +1,30 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+
 bool is_digit(char c)
 {
     int intval = c - '0';
     return intval < 10 && intval >= 0;
 }
 
+// Checks if string is valid
 bool is_valid(char *numstring)
 {
     char *curr_char = numstring;
-    while (*curr_char != '\0' && (is_digit(*curr_char) || *curr_char == '.' || *curr_char == '-'))
+    bool seen_decimal_point = false;
+    bool seen_negative_sign = false;
+    while (*curr_char != '\0' && (is_digit(*curr_char) || (*curr_char == '.' && !seen_decimal_point) || (*curr_char == '-' && !seen_negative_sign)))
     {
+        seen_decimal_point = seen_decimal_point || *curr_char == '.';
+        seen_negative_sign = seen_negative_sign || *curr_char == '-';
         curr_char++;
     }
     return *curr_char == '\0';
 }
 
-
+// Takes largest integer from a string representation of a float.
+// Returns true if the the numstring is valid, else false
 bool characteristic(char numString[], int *c)
 {
     int index = 0;
@@ -52,11 +59,13 @@ bool characteristic(char numString[], int *c)
     return true;
 }
 
+// Gets the numerator and denominator of the fraction part of a float
+// Returns true if the the numstring is valid, else false
 bool mantissa(char numString[], int *numerator, int *denominator)
 {
     int index = 0;
-    int dvalue = 1;
-    int nvalue = 0;
+    int denominator_val = 1;
+    int numerator_val = 0;
     
     //validate numstring
 
@@ -73,8 +82,8 @@ bool mantissa(char numString[], int *numerator, int *denominator)
 
             while(isdigit(numString[index]))
             {
-                dvalue *= 10;
-                nvalue = (nvalue *10) + (numString[index] - '0');
+                denominator_val *= 10;
+                numerator_val = (numerator_val *10) + (numString[index] - '0');
 
                 index++;
             }
@@ -83,8 +92,8 @@ bool mantissa(char numString[], int *numerator, int *denominator)
         index ++;
     }
 
-    *numerator = nvalue;
-    *denominator = dvalue;
+    *numerator = numerator_val;
+    *denominator = denominator_val;
 
     return true;
 }
@@ -92,18 +101,18 @@ bool mantissa(char numString[], int *numerator, int *denominator)
 
 int main()
 {
-    int c = 0;
-    int n = 0;
-    int d = 0;
-    char number[] = "   ----12.5987907  ";
+    int charactaristic = 0;
+    int numerator = 0;
+    int denominator = 0;
+    char test_number_string[] = "   ----12.5987907  ";
     
-    characteristic(number,  &c);
+    characteristic(test_number_string,  &charactaristic);
 
-    printf("%d\n", c);
+    printf("%d\n", charactaristic);
 
-    mantissa(number, &n, &d);
+    mantissa(test_number_string, &numerator, &denominator);
 
-    printf("numerator: %d\n", n);
-    printf("denominator: %d\n", d);
+    printf("numerator: %d\n", numerator);
+    printf("denominator: %d\n", denominator);
     return 0;
 }
